@@ -2,12 +2,16 @@ require 'pry'
 
 class Board
 
-  attr_reader :size, :border, :working_rows, :header_row
+  attr_reader :size, :border, :header_row
+  attr_accessor :two_unit_ship, :three_unit_ship, :working_rows
+  
   def initialize(size = 4)
     @size = size
     @border = ""
     @working_rows = []
     @header_row = []
+    @two_unit_ship = []
+    @three_unit_ship = []
   end
 
   def create_board(size = @size)
