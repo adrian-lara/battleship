@@ -2,7 +2,7 @@ require './lib/board'
 
 class Validation
 
-  attr_reader :result
+  attr_reader :result, :head_row, :head_column, :tail_row, :tail_column, :middle
   attr_accessor :two_ship_location
 
   def initialize(head, tail, ship_type, two_ship_location = nil)
@@ -13,6 +13,7 @@ class Validation
     @tail_row = nil
     @head_column = nil
     @tail_column = nil
+    @middle = nil
 
     @row_proximity = nil
     @column_proximity = nil
@@ -115,14 +116,14 @@ class Validation
     if @row_proximity == 2
       greater_row = [@head_row, @tail_row].max
       middle_row = letters[letters.index(greater_row) - 1]
-      middle = middle_row + @head_column.to_s
+      @middle = middle_row + @head_column.to_s
     else
       greater_column = [@head_column, @tail_column].max
       middle_column = greater_column - 1
-      middle = middle_column.to_s + @head_row
+      @middle = @head_row + middle_column.to_s
     end
 
-    return three_ship_overlap_fail if @two_ship_location.include?(middle)
+    return three_ship_overlap_fail if @two_ship_location.include?(@middle)
 
     true
   end

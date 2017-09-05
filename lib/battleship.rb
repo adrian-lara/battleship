@@ -20,9 +20,8 @@ class Battleship
     @players[0].owner_board.create_board
     assignment_prompt
     assign_ship_location("two-unit")
-    #update owner_board to reflect placement of two ship
     assign_ship_location("three-unit", @players[0].owner_board.two_ship_location)
-    #update owner_board to reflect placement of two ship
+    @players[0].owner_board.print_board
   end
 
   def assignment_prompt
@@ -48,6 +47,7 @@ class Battleship
     end
 
     update_ship_location(coordinates, ship_type)
+    update_board(validity, ship_type)
   end
 
   def update_ship_location(coordinates, ship_type)
@@ -55,6 +55,25 @@ class Battleship
       @players[0].owner_board.two_ship_location = coordinates
     elsif ship_type == "three-unit"
       @players[0].owner_board.three_ship_location = coordinates
+    end
+  end
+
+  def update_board(validity_components, ship_type)
+    #use coordinates to replace " " with "X"
+    letters = ("A".."D").to_a
+
+    head_row = letters.index(validity_components.head_row)
+    head_column = validity_components.head_column
+    @players[0].owner_board.working_rows[head_row][head_column] = "X"
+
+    tail_row = letters.index(validity_components.tail_row)
+    tail_column = validity_components.tail_column
+    @players[0].owner_board.working_rows[tail_row][tail_column] = "X"
+
+    if ship_type == "three-unit"
+      middle_row = letters.index(validity_components.middle[0])
+      middle_column = validity_components.middle[1].to_i
+      @players[0].owner_board.working_rows[middle_row][middle_column] = "X"
     end
   end
 

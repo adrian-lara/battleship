@@ -38,6 +38,7 @@ class BattleshipTest < Minitest::Test
   end
 
   def test_assign_user_ships_populates_working_rows_array_for_owner_board
+    skip
     @battleship.assign_user_ships
     refute_equal [], @battleship.players[0].owner_board.working_rows
   end
