@@ -81,10 +81,42 @@ class BoardTest < Minitest::Test
 
   def test_two_ship_location_valid_refutes_ship_positions_if_they_are_not_next_to_each_other
     refute @board.two_ship_location_valid?("A1","A3")
+    refute @board.two_ship_location_valid?("A1","A1")
+    refute @board.two_ship_location_valid?("B1","A2")
   end
 
   def test_two_ship_location_valid_asserts_a_valid_ship_position
     assert @board.two_ship_location_valid?("A1","A2")
+    assert @board.two_ship_location_valid?("B1","B2")
+    assert @board.two_ship_location_valid?("D1","C1")
+    assert @board.two_ship_location_valid?("D4","D3")
   end
 
+  def test_three_ship_location_valid_refutes_ship_positions_that_arent_on_the_board
+    refute @board.three_ship_location_valid?("Z1","A2")
+    refute @board.three_ship_location_valid?("A5","A2")
+    refute @board.three_ship_location_valid?("A1","Z2")
+  end
+
+  def test_three_ship_location_valid_refutes_ship_positions_if_the_head_and_tail_are_not_separated_either_vertically_or_horizontally_by_one_spot
+    refute @board.three_ship_location_valid?("A1","A2")
+    refute @board.three_ship_location_valid?("A1","A4")
+    refute @board.three_ship_location_valid?("B1","A2")
+    refute @board.three_ship_location_valid?("D4","C4")
+    refute @board.three_ship_location_valid?("D4","A4")
+  end
+
+  def test_three_ship_location_valid_refutes_ship_positions_if_either_position_coincides_with_a_two_ship_position
+    @board.two_ship_location = ["B2","B3"]
+
+    refute @board.three_ship_location_valid?("B1","B3")
+    refute @board.three_ship_location_valid?("A2","C2")
+  end
+
+  def test_three_ship_location_valid_asserts_a_valid_ship_position
+    assert @board.three_ship_location_valid?("A1","A3")
+    assert @board.three_ship_location_valid?("A1","C1")
+    assert @board.three_ship_location_valid?("D4","D2")
+    assert @board.three_ship_location_valid?("B2","D2")
+  end
 end
