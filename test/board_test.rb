@@ -21,8 +21,8 @@ class BoardTest < Minitest::Test
   end
 
   def test_board_is_createed_with_two_empty_arrays_for_player_ship_placement
-    assert_equal [], @board.two_unit_ship
-    assert_equal [], @board.three_unit_ship
+    assert_equal [], @board.two_ship_location
+    assert_equal [], @board.three_ship_location
   end
 
   def test_create_board_runs_methods_to_create_board_without_error
@@ -71,6 +71,20 @@ class BoardTest < Minitest::Test
 
     new_board.create_board
     new_board.print_board
+  end
+
+  def test_two_ship_location_valid_refutes_ship_positions_that_arent_on_the_board
+    refute @board.two_ship_location_valid?("Z1","A2")
+    refute @board.two_ship_location_valid?("A5","A2")
+    refute @board.two_ship_location_valid?("A1","Z2")
+  end
+
+  def test_two_ship_location_valid_refutes_ship_positions_if_they_are_not_next_to_each_other
+    refute @board.two_ship_location_valid?("A1","A3")
+  end
+
+  def test_two_ship_location_valid_asserts_a_valid_ship_position
+    assert @board.two_ship_location_valid?("A1","A2")
   end
 
 end

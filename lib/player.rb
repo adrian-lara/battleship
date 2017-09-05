@@ -2,11 +2,13 @@ require './lib/board'
 
 class Player
 
-  attr_reader :board, :user_type
+  attr_accessor :owner_board, :opponent_board
 
-  def initialize
-    @board = Board.new
-    @user_type = "Human"
+  def initialize()
+    @owner_board = Board.new
+    @opponent_board = Board.new
   end
+
+
 
 end
