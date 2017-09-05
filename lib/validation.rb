@@ -2,9 +2,10 @@ require './lib/board'
 
 class Validation
 
+  attr_reader :result
   attr_accessor :two_ship_location
 
-  def initialize(head, tail, ship_type)
+  def initialize(head, tail, ship_type, two_ship_location = nil)
     @head = head
     @tail = tail
     @ship_type = ship_type
@@ -17,12 +18,14 @@ class Validation
     @column_proximity = nil
     @total_proximity = nil
 
-    @two_ship_location = nil
+    @two_ship_location = two_ship_location
+
+    @result = false
   end
 
   def setup
-    @head_row = @head.split("")[0]
-    @tail_row = @tail.split("")[0]
+    @head_row = @head.split("")[0].upcase
+    @tail_row = @tail.split("")[0].upcase
     @head_column = @head.split("")[1].to_i
     @tail_column = @tail.split("")[1].to_i
 
@@ -32,15 +35,15 @@ class Validation
   end
 
 #rename valid_location?
-  def result?
+  def perform_validation
     setup
 
-    return off_board_fail unless @head.length == 2 && @tail.length == 2
+    return @result = off_board_fail unless @head.length == 2 && @tail.length == 2
 
-    if @ship_type == "two_unit"
-      return two_ship_location_valid?
-    elsif @ship_type = "three_unit"
-      return three_ship_location_valid?
+    if @ship_type == "two-unit"
+      return @result = two_ship_location_valid?
+    elsif @ship_type == "three-unit"
+      return @result = three_ship_location_valid?
     end
   end
 
