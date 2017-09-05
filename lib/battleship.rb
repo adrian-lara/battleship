@@ -12,10 +12,6 @@ class Battleship
     @winner = nil
   end
 
-  # def game_setup
-  #
-  # end
-
   def assign_user_ships
     @players[0].owner_board.create_board
     assignment_prompt
@@ -59,7 +55,6 @@ class Battleship
   end
 
   def update_board(validity_components, ship_type)
-    #use coordinates to replace " " with "X"
     letters = ("A".."D").to_a
 
     head_row = letters.index(validity_components.head_row)
