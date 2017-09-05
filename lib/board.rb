@@ -51,44 +51,48 @@ class Board
     puts @border
   end
 
-  def two_ship_location_valid?(head, tail)
-    result = located_on_board_check(head,tail)
-    return result if result == false
-    result = two_ship_proximity_check(head,tail)
-  end
+  def validate_location(head, tail, ship_type)
+    return off_board_fail unless head.length == 2 && tail.length == 2
 
-  def located_on_board_check(head, tail)
-    return located_on_board_fail unless head.length == 2 && tail.length == 2
-
-    letters = ("A".."D").to_a
     head_row = head.split("")[0]
     tail_row = tail.split("")[0]
-    row_validity = letters.include?(head_row) && letters.include?(tail_row)
-    return located_on_board_fail unless row_validity
-
-    numbers = [1, 2, 3, 4]
     head_column = head.split("")[1].to_i
     tail_column = tail.split("")[1].to_i
+
+    if ship_type == "two_unit"
+      return two_ship_location_valid?(head_row, head_column, tail_row, tail_column)
+    elsif ship_type = "three_unit"
+      return three_ship_location_valid?(head, tail, head_row, head_column, tail_row, tail_column)
+    end
+  end
+
+  def two_ship_location_valid?(head_row, head_column, tail_row, tail_column)
+    result = off_board_check(head_row, head_column, tail_row, tail_column)
+    return result if result == false
+    result = two_ship_proximity_check(head_row, head_column, tail_row, tail_column)
+  end
+
+  def off_board_check(head_row, head_column, tail_row, tail_column)
+    letters = ("A".."D").to_a
+    row_validity = letters.include?(head_row) && letters.include?(tail_row)
+    return off_board_fail unless row_validity
+
+    numbers = [1, 2, 3, 4]
     column_validitiy = numbers.include?(head_column) && numbers.include?(tail_column)
-    return located_on_board_fail unless column_validitiy
+    return off_board_fail unless column_validitiy
 
     true
   end
 
-  def located_on_board_fail
+  def off_board_fail
     puts "\nThese positions aren't on the game board.\n"
     false
   end
 
-  def two_ship_proximity_check(head, tail)
-    letters = ("A".."D").to_a
-    head_row = head.split("")[0]
-    tail_row = tail.split("")[0]
+  def two_ship_proximity_check(head_row, head_column, tail_row, tail_column)
     row_proximity = (head_row.hex - tail_row.hex).abs
     return proximity_fail unless row_proximity <= 1
 
-    head_column = head.split("")[1].to_i
-    tail_column = tail.split("")[1].to_i
     column_proximity = (head_column - tail_column).abs
     return proximity_fail unless column_proximity <= 1
 
@@ -103,22 +107,18 @@ class Board
     false
   end
 
-  def three_ship_location_valid?(head,tail)
-    result = located_on_board_check(head,tail)
+  def three_ship_location_valid?(head, tail, head_row, head_column, tail_row, tail_column)
+    result = off_board_check(head_row, head_column, tail_row, tail_column)
     return result if result == false
-    result = three_ship_proximity_check(head, tail)
+    result = three_ship_proximity_check(head_row, head_column, tail_row, tail_column)
     return result if result == false
-    result = three_ship_overlap_check(head,tail)
+    result = head_tail_overlap_check(head, tail)
+    return result if result == false
+    result = ship_middle_overlap_check(head_row, head_column, tail_row, tail_column)
   end
 
-  def three_ship_proximity_check(head, tail)
-    letters = ("A".."D").to_a
-    head_row = head.split("")[0]
-    tail_row = tail.split("")[0]
+  def three_ship_proximity_check(head_row, head_column, tail_row, tail_column)
     row_proximity = (head_row.hex - tail_row.hex).abs
-
-    head_column = head.split("")[1].to_i
-    tail_column = tail.split("")[1].to_i
     column_proximity = (head_column - tail_column).abs
 
     total_proximity = row_proximity + column_proximity
@@ -130,20 +130,17 @@ class Board
     true
   end
 
-  def three_ship_overlap_check(head, tail)
+  def head_tail_overlap_check(head, tail)
     overlap = @two_ship_location.find do |coordinate|
-       [head, tail].include?(coordinate)
+      [head, tail].include?(coordinate)
     end
 
-    return false unless overlap.nil?
+    return three_ship_overlap_fail unless overlap.nil?
+  end
 
+  def ship_middle_overlap_check(head_row, head_column, tail_row, tail_column)
     letters = ("A".."D").to_a
-    head_row = head.split("")[0]
-    tail_row = tail.split("")[0]
     row_proximity = (head_row.hex - tail_row.hex).abs
-
-    head_column = head.split("")[1].to_i
-    tail_column = tail.split("")[1].to_i
     column_proximity = (head_column - tail_column).abs
 
     if row_proximity == 2
@@ -156,11 +153,7 @@ class Board
       middle = middle_column.to_s + head_row
     end
 
-    overlap = @two_ship_location.find do |coordinate|
-       [head, middle, tail].include?(coordinate)
-    end
-
-    return false unless overlap.nil?
+    return three_ship_overlap_fail if @two_ship_location.include?(middle)
 
     true
   end
