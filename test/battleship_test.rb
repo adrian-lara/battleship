@@ -37,18 +37,4 @@ class BattleshipTest < Minitest::Test
     assert_nil @battleship.winner
   end
 
-  def test_assign_user_ships_prompts_for_and_performs_validation_for_each_and_assigns_both_ships
-    @battleship.assign_user_ships
-
-    refute_equal [], @battleship.players[0].owner_board.two_ship_location
-    refute_equal [], @battleship.players[0].owner_board.three_ship_location
-  end
-
-  def test_assign_computer_ships_validates_and_assigns_both_randomly_placed_ships
-    @battleship.assign_computer_ships
-
-    refute_equal [], @battleship.players[1].owner_board.two_ship_location
-    refute_equal [], @battleship.players[1].owner_board.three_ship_location
-  end
-
 end
