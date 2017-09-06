@@ -69,9 +69,6 @@ class Player
   end
 
   def update_ship_location(coordinates, ship_type)
-    user = 0
-    user = 1 if @type == "computer"
-
     if ship_type == "two-unit"
       @owner_board.two_ship_location = coordinates
     elsif ship_type == "three-unit"
@@ -127,6 +124,8 @@ class Player
       validity = Validation.new(coordinates[0], coordinates[1], ship_type, two_ship_location)
       validity.perform_validation
     end
+
+    coordinates.insert(1, validity.middle.location) if ship_type == "three-unit"
 
     update_ship_location(coordinates, ship_type)
     update_board(validity, ship_type)
