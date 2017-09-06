@@ -3,12 +3,13 @@ require './lib/validation'
 
 class Player
 
-  attr_accessor :owner_board, :opponent_board, :type
+  attr_accessor :owner_board, :opponent_board, :type, :turn_history
 
   def initialize(type)
     @owner_board = Board.new
     @opponent_board = Board.new
     @type = type
+    @turn_history = []
   end
 
   def assign_ships()

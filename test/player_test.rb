@@ -30,6 +30,11 @@ class PlayerTest < Minitest::Test
     assert_equal "computer", @player_2.type
   end
 
+  def test_player_has_a_turn_history_array_thats_empty_by_default
+    assert_equal [], @player_1.turn_history
+    assert_equal [], @player_2.turn_history
+  end
+
   def test_assign_ships_validates_and_assigns_both_randomly_placed_ships_for_computer_user
     @player_2.assign_ships
 
