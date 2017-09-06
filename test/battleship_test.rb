@@ -41,4 +41,14 @@ class BattleshipTest < Minitest::Test
     assert_instance_of Turn, @battleship.players[0].turn_history[0]
   end
 
+  #TODO will be outdated after a while
+    def test_main_phase_makes_a_computer_create_and_take_a_turn_and_save_it_in_shot_history
+      skip
+      assert_equal 0, @battleship.players[1].turn_history.count
+      @battleship.main_phase
+
+      assert_equal 1, @battleship.players[1].turn_history.count
+      assert_instance_of Turn, @battleship.players[1].turn_history[0]
+    end
+
 end

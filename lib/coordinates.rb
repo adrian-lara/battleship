@@ -4,8 +4,8 @@ class Coordinates
 
   def initialize(location)
     @location = location
-    @possible_rows = ("A".."L").to_a
-    @possible_columns = (1..12).to_a
+    @possible_rows = ("A".."D").to_a
+    @possible_columns = (1..4).to_a
   end
 
   def valid?

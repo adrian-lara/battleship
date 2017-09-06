@@ -1,6 +1,7 @@
 require 'pry'
 require './lib/player'
 require './lib/turn'
+require './lib/coordinates'
 
 class Battleship
 
@@ -19,9 +20,10 @@ class Battleship
 
   def main_phase
     create_opponent_boards
-    player_index = 1
+    player_index = 1 #1 = user turn ; 0 = computer turn
 
-    while @winner.nil?
+# #TODO!!!!! currently cannot exit loop
+#     while @winner != nil
       opponent_index = player_index
       player_index = (player_index + 1) % 2
       current_player = @players[player_index]
@@ -31,8 +33,8 @@ class Battleship
       #if result == "hit", call hit_sequence method
       #if current_player.type == user, update_opponent_board method to change rendering of opponent_board
       # => and render opponent_board
-      @winner == "user"
-    end
+# @winner == "user"
+# end
   end
 
   def create_opponent_boards
@@ -50,15 +52,13 @@ class Battleship
     current_shot.result(opponent.owner_board)
   end
 
-#only logic that differs between computer and user is how location is attained
   def user_shot(current_player)
     shot_validity = false
-    #TODO currently cannot exit loop
-    until shot_validity
-      location = gets.chomp
 
-      coordinates = Coordinates.new(location)
-      shot_validity = coordinates.valid?
+    until shot_validity
+      puts "\nEnter a valid shot location: "
+      location = gets.chomp.upcase
+      shot_validity = Coordinates.new(location).valid?
     end
     location
   end
@@ -66,13 +66,17 @@ class Battleship
   def computer_shot(current_player)
     shot_validity = false
     until shot_validity
+#TODO this can be split out into its own method
       random_row_number = rand(0..3)
       random_row = ["A", "B", "C", "D"][random_row_number]
       random_column = rand(1..4)
       location = random_row + random_column.to_s
 
-      coordinates = Coordinates.new(location)
-      shot_validity = coordinates.valid?
+#TODO prove to yourself that this works
+      history_check = current_player.turn_history.find { |turn| turn.shot == location }
+      next unless history_check.nil?
+
+      shot_validity = Coordinates.new(location).valid?
     end
     location
   end
