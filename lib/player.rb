@@ -98,8 +98,8 @@ class Player
   def assign_user_ships
     @owner_board.create_board
     assignment_prompt
-    assign_ship_location("two-unit")
-    assign_ship_location("three-unit", @owner_board.two_ship_location)
+    assign_user_ship("two-unit")
+    assign_user_ship("three-unit", @owner_board.two_ship_location)
     @owner_board.print_board
   end
 
@@ -111,7 +111,7 @@ class Player
          "The grid has A1 at the top left and D4 at the bottom right.\n\n"
   end
 
-  def assign_ship_location(ship_type, two_ship_location = nil)
+  def assign_user_ship(ship_type, two_ship_location = nil)
     validity = Validation.new("", "", ship_type, two_ship_location)
 
     while validity.result == false
