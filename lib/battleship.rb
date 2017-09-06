@@ -55,19 +55,17 @@ class Battleship
   end
 
   def update_board(validity_components, ship_type)
-    letters = ("A".."D").to_a
-
-    head_row = letters.index(validity_components.head_row)
-    head_column = validity_components.head_column
+    head_row = validity_components.head.row_number
+    head_column = validity_components.head.column_number
     @players[0].owner_board.working_rows[head_row][head_column] = "X"
 
-    tail_row = letters.index(validity_components.tail_row)
-    tail_column = validity_components.tail_column
+    tail_row = validity_components.tail.row_number
+    tail_column = validity_components.tail.column_number
     @players[0].owner_board.working_rows[tail_row][tail_column] = "X"
 
     if ship_type == "three-unit"
-      middle_row = letters.index(validity_components.middle[0])
-      middle_column = validity_components.middle[1].to_i
+      middle_row = validity_components.middle.row_number
+      middle_column = validity_components.middle.column_number
       @players[0].owner_board.working_rows[middle_row][middle_column] = "X"
     end
   end

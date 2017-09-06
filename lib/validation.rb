@@ -1,18 +1,15 @@
 require './lib/board'
+require './lib/coordinates'
 
 class Validation
 
-  attr_reader :result, :head_row, :head_column, :tail_row, :tail_column, :middle
+  attr_reader :result, :head, :tail, :middle
   attr_accessor :two_ship_location
 
   def initialize(head, tail, ship_type, two_ship_location = nil)
-    @head = head
-    @tail = tail
+    @head = Coordinates.new(head)
+    @tail = Coordinates.new(tail)
     @ship_type = ship_type
-    @head_row = nil
-    @tail_row = nil
-    @head_column = nil
-    @tail_column = nil
     @middle = nil
 
     @row_proximity = nil
@@ -25,21 +22,17 @@ class Validation
   end
 
   def setup
-    @head_row = @head.split("")[0].upcase
-    @tail_row = @tail.split("")[0].upcase
-    @head_column = @head.split("")[1].to_i
-    @tail_column = @tail.split("")[1].to_i
-
-    @row_proximity = (@head_row.hex - @tail_row.hex).abs
-    @column_proximity = (@head_column - @tail_column).abs
+    @row_proximity = (@head.row_number - @tail.row_number).abs
+    @column_proximity = (@head.column_number - @tail.column_number).abs
     @total_proximity = @row_proximity + @column_proximity
   end
 
 #rename valid_location?
   def perform_validation
-    setup
+    entry_validity = @head.valid? && @tail.valid?
+    return @result = off_board_fail unless entry_validity
 
-    return @result = off_board_fail unless @head.length == 2 && @tail.length == 2
+    setup
 
     if @ship_type == "two-unit"
       return @result = two_ship_location_valid?
@@ -55,12 +48,12 @@ class Validation
   end
 
   def off_board_check
-    letters = ("A".."D").to_a
-    row_validity = letters.include?(@head_row) && letters.include?(@tail_row)
+    valid_rows = (0..3).to_a
+    row_validity = valid_rows.include?(@head.row_number) && valid_rows.include?(@tail.row_number)
     return off_board_fail unless row_validity
 
-    numbers = [1, 2, 3, 4]
-    column_validitiy = numbers.include?(@head_column) && numbers.include?(@tail_column)
+    valid_columns = (1..4).to_a
+    column_validitiy = valid_columns.include?(@head.column_number) && valid_columns.include?(@tail.column_number)
     return off_board_fail unless column_validitiy
 
     true
@@ -105,27 +98,36 @@ class Validation
 
   def head_tail_overlap_check
     overlap = @two_ship_location.find do |coordinate|
-      [@head, @tail].include?(coordinate)
+      [@head.location, @tail.location].include?(coordinate)
     end
 
     return three_ship_overlap_fail unless overlap.nil?
+
+    true
   end
 
   def ship_middle_overlap_check
-    letters = ("A".."D").to_a
-    if @row_proximity == 2
-      greater_row = [@head_row, @tail_row].max
-      middle_row = letters[letters.index(greater_row) - 1]
-      @middle = middle_row + @head_column.to_s
-    else
-      greater_column = [@head_column, @tail_column].max
-      middle_column = greater_column - 1
-      @middle = @head_row + middle_column.to_s
-    end
+    create_middle_for_three_ship
 
-    return three_ship_overlap_fail if @two_ship_location.include?(@middle)
+    return three_ship_overlap_fail if @two_ship_location.include?(@middle.location)
 
     true
+  end
+
+  def create_middle_for_three_ship
+    letters = ("A".."D").to_a
+
+    if @row_proximity == 2
+      greater_row = [@head.row_number, @tail.row_number].max
+      middle_row = letters[greater_row - 1]
+      middle_column = @head.column_number.to_s
+    else
+      greater_column = [@head.column_number, @tail.column_number].max
+      middle_column = (greater_column - 1).to_s
+      middle_row = letters[@head.row_number]
+    end
+
+    @middle = Coordinates.new(middle_row + middle_column)
   end
 
   def three_ship_overlap_fail
