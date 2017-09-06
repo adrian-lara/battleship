@@ -37,32 +37,18 @@ class BattleshipTest < Minitest::Test
     assert_nil @battleship.winner
   end
 
-  def test_assign_user_ships_populates_working_rows_array_for_owner_board
-    skip
-    @battleship.assign_user_ships
-    refute_equal [], @battleship.players[0].owner_board.working_rows
-  end
-
-  def test_assign_user_ships_assigns_both_ships_and_performs_validation_for_each
+  def test_assign_user_ships_prompts_for_and_performs_validation_for_each_and_assigns_both_ships
     @battleship.assign_user_ships
 
     refute_equal [], @battleship.players[0].owner_board.two_ship_location
     refute_equal [], @battleship.players[0].owner_board.three_ship_location
   end
 
-  def test_assign_ship_location_prompts_user_for_two_positions_and_inputs_that_for_two_ship_into_location
-    skip
-    @battleship.assign_ship_location("two-unit")
+  def test_assign_computer_ships_validates_and_assigns_both_randomly_placed_ships
+    @battleship.assign_computer_ships
 
-    refute_equal [], @battleship.players[0].owner_board.two_ship_location
-    assert_equal ["A1", "B1"], @battleship.players[0].owner_board.two_ship_location
-  end
-
-  def test_assign_ship_location_can_validate_and_assign_three_unit_ship_location_making_array_nonempty
-    skip
-    @battleship.assign_ship_location("three-unit", ["B2","B3"])
-
-    refute_equal [], @battleship.players[0].owner_board.three_ship_location
+    refute_equal [], @battleship.players[1].owner_board.two_ship_location
+    refute_equal [], @battleship.players[1].owner_board.three_ship_location
   end
 
 end
