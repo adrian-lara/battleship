@@ -40,10 +40,10 @@ class CoordinatesTest < Minitest::Test
 
   def test_row_number_returns_row_number_according_to_first_character_of_location
     coordinates1 = Coordinates.new("B1")
-    assert_equal 2, coordinates1.row_number
+    assert_equal 1, coordinates1.row_number
 
     coordinates2 = Coordinates.new("C2")
-    assert_equal 3, coordinates2.row_number
+    assert_equal 2, coordinates2.row_number
   end
 
   def test_column_number_returns_integer_provided_by_second_character_of_location
