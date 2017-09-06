@@ -73,7 +73,7 @@ class Validation
   end
 
   def proximity_fail
-    puts "\nThese positions aren't horizontally or vertically next to each other.\n"
+    puts "\nThese positions aren't horizontally or vertically close enough to each other.\n"
     false
   end
 
