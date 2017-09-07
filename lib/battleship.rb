@@ -13,9 +13,12 @@ class Battleship
     @winner = nil
   end
 
-#TODO delete later
-  def assume_assign_ships_phase
-
+#TODO delete later. For creating game only
+  def assume_assign_ships_phase_occurred
+    @players[0].two_ship_location = ["A1", "A2"]
+    @players[0].three_ship_location = ["B1", "B2", "B3"]
+    @players[1].two_ship_location = ["C1", "C2"]
+    @players[1].three_ship_location = ["D1", "D2", "D3"]
   end
 
   def main_phase
@@ -37,7 +40,7 @@ class Battleship
       end
 
       break @winner = current_player.type if result == "Game Over"
-
+      
       #if current_player.type == user, update_opponent_board method to change rendering of opponent_board
       # => and render opponent_board
     end
