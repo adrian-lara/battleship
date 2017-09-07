@@ -13,22 +13,28 @@ class Game < Turn
   end
 
   def run
+    start_time
+    ship_placement_phase
     main_phase
+    end_time
+    display_game_result
   end
 
-#TODO delete later. For creating game only
-  def assume_assign_ships_phase_occurred
-    # @players[0].two_ship_location = ["A1", "A2"]
-    # @players[0].three_ship_location = ["B1", "B2", "B3"]
-    # @players[1].two_ship_location = ["C1", "C2"]
-    # @players[1].three_ship_location = ["D1", "D2", "D3"]
-    @players[1].three_ship_location = ["D3"]
+  def start_time
+    @timer = Time.now
+  end
+
+  def end_time
+    @timer = Time.now - @timer
+  end
+
+  def ship_placement_phase
+    @players.each { |player| player.assign_ships }
   end
 
   def main_phase
-    assume_assign_ships_phase_occurred
     create_user_progress_board
-    player_index = 1 #1 = user turn ; 0 = computer turn
+    player_index = 1
 
     while @winner.nil?
       opponent_index = player_index
@@ -38,8 +44,6 @@ class Game < Turn
 
       execute_turn(current_player, opponent)
     end
-
-    display_game_result
   end
 
   def create_user_progress_board
@@ -47,8 +51,18 @@ class Game < Turn
   end
 
   def display_game_result
-    puts "\n#{@winner.type} wins!!\n"
+    salutation = "Congratulations!"
+    salutation = "Sorry!" if @winner.type == "Computer"
+
+    puts "\n#{salutation}\nThe #{@winner.type.downcase} wins!!\n"
     puts "\nIt took #{@winner.turn_history.count} turns!\n\n"
+    puts "Elapsed game time was #{convert_seconds(@timer)}."
+  end
+
+  def convert_seconds(time)
+    minutes = (time/60).to_i
+    seconds = (time % 60).to_i
+    "#{minutes} minutes and #{seconds} seconds"
   end
 
 end

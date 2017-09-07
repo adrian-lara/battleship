@@ -1,7 +1,7 @@
 require './lib/board'
 require './lib/validation'
 
-class Player
+class Player < Validation
 
   attr_reader :type
   attr_accessor :owner_board, :progress_board, :turn_history, :two_ship_location, :three_ship_location
@@ -15,9 +15,9 @@ class Player
     @three_ship_location = []
   end
 
-  def assign_ships()
-    assign_computer_ships if @type == "computer"
-    assign_user_ships if @type == "user"
+  def assign_ships
+    assign_computer_ships if @type == "Computer"
+    assign_user_ships if @type == "User"
   end
 
   def assign_computer_ships
@@ -38,36 +38,46 @@ class Player
 #TODO turn off stdout
     while validity.result == false
       coordinates = []
-      random_row_number = rand(0..3)
-      random_row = ["A", "B", "C", "D"][random_row_number]
-      random_column = rand(1..4)
-      coordinates << random_row + random_column.to_s
+      head = random_location
+      coordinates << head
 
-#TODO this can be split out
-      random_direction = rand(1..4)
-      if random_direction == 1
-        new_row_number = (random_row_number + shift) % 4
-        adjusted_row = ["A", "B", "C", "D"][new_row_number]
-        coordinates << adjusted_row + random_column.to_s
-      elsif random_direction == 2
-        new_row_number = (random_row_number - shift) % 4
-        adjusted_row = ["A", "B", "C", "D"][new_row_number]
-        coordinates << adjusted_row + random_column.to_s
-      elsif random_direction == 3
-        adjusted_column = random_column + shift
-        coordinates << random_row + adjusted_column.to_s
-      elsif random_direction == 4
-        adjusted_column = random_column - shift
-        coordinates << random_row + adjusted_column.to_s
-      end
-
-      validity = Validation.new(coordinates[0], coordinates[1], ship_type, two_ship_location)
+      tail = random_tail(head, shift)
+      coordinates << tail
+      validity = Validation.new(head, tail, ship_type, two_ship_location)
       validity.perform_validation
     end
-#TODO turn on stdout
+
+    coordinates.insert(1, validity.middle.location) if ship_type == "three-unit"
 
     update_ship_location(coordinates, ship_type)
     update_board(validity, ship_type)
+  end
+
+  def random_location
+    random_row_number = rand(0..3)
+    random_row = ["A", "B", "C", "D"][random_row_number]
+    random_column = rand(1..4)
+    random_row + random_column.to_s
+  end
+
+  def random_tail(location, shift)
+    direction = rand(1..4)
+    head = Coordinates.new(location)
+    if direction == 1
+      new_row_number = (head.row_number + shift) % 4
+      new_row = ["A", "B", "C", "D"][new_row_number]
+      new_row + head.column_number.to_s
+    elsif direction == 2
+      new_row_number = (head.row_number - shift) % 4
+      new_row = ["A", "B", "C", "D"][new_row_number]
+      new_row + head.column_number.to_s
+    elsif direction == 3
+      new_column = head.column_number + shift
+      head.row + new_column.to_s
+    elsif direction == 4
+      new_column = head.column_number - shift
+      head.row + new_column.to_s
+    end
   end
 
   def head_tail_proximity_difference(ship_type)

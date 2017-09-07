@@ -1,4 +1,6 @@
-class Turn
+require './lib/player'
+
+class Turn < Player
 
   attr_reader :shot
 
@@ -87,15 +89,9 @@ class Turn
     location
   end
 
-  def random_location
-    random_row_number = rand(0..3)
-    random_row = ["A", "B", "C", "D"][random_row_number]
-    random_column = rand(1..4)
-    random_row + random_column.to_s
-  end
-
   def hit_sequence(shot, opponent)
     ship_destroyed = remove_ship_coordinate(shot, opponent)
+    print_ship_destroyed(opponent) if ship_destroyed
     check_all_ships_destroyed(opponent) if ship_destroyed
   end
 
@@ -105,7 +101,15 @@ class Turn
       check_ship_status(opponent.two_ship_location)
     else
       opponent.three_ship_location.delete(coordinate)
-      check_ship_status(opponent.two_ship_location)
+      check_ship_status(opponent.three_ship_location)
+    end
+  end
+
+  def print_ship_destroyed(player)
+    if player.two_ship_location.empty?
+      puts "You've destroyed the two-unit ship!"
+    elsif
+      puts "You've destroyed the three-unit ship!"
     end
   end
 

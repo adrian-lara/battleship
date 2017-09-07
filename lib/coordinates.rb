@@ -15,6 +15,10 @@ class Coordinates
     true
   end
 
+  def row
+    @location[0]
+  end
+
   def row_number
     @possible_rows.index(@location[0])
   end
