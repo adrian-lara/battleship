@@ -24,12 +24,10 @@ class Player < Validation
     @owner_board.create_board
     assign_computer_ship("two-unit")
     assign_computer_ship("three-unit", @two_ship_location)
-# delete print board TODO
-    @owner_board.print_board
   end
 
   def assign_computer_ship(ship_type, two_ship_location = nil)
-    validity = Validation.new("", "", ship_type, two_ship_location, @type)
+    validity = Validation.new("", "", ship_type, @type, two_ship_location)
 
     shift = head_tail_proximity_difference(ship_type)
 
@@ -40,7 +38,7 @@ class Player < Validation
 
       tail = random_tail(head, shift)
       coordinates << tail
-      validity = Validation.new(head, tail, ship_type, two_ship_location, @type)
+      validity = Validation.new(head, tail, ship_type, @type, two_ship_location)
       validity.perform_validation
     end
 
@@ -122,7 +120,7 @@ class Player < Validation
   end
 
   def assign_user_ship(ship_type, two_ship_location = nil)
-    validity = Validation.new("", "", ship_type, two_ship_location, @type)
+    validity = Validation.new("", "", ship_type, @type, two_ship_location)
 
     while validity.result == false
       @owner_board.print_board
@@ -131,7 +129,7 @@ class Player < Validation
       next puts "That's not a valid entry!" unless location.include?(" ")
       coordinates = location.split(' ', 2)
 
-      validity = Validation.new(coordinates[0], coordinates[1], ship_type, two_ship_location, @type)
+      validity = Validation.new(coordinates[0], coordinates[1], ship_type, @type, two_ship_location)
       validity.perform_validation
     end
 
