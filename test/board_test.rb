@@ -20,11 +20,6 @@ class BoardTest < Minitest::Test
     assert_equal 4, @board.size
   end
 
-  def test_board_is_createed_with_two_empty_arrays_for_player_ship_placement
-    assert_equal [], @board.two_ship_location
-    assert_equal [], @board.three_ship_location
-  end
-
   def test_create_board_runs_methods_to_create_board_without_error
     @board.create_board
   end

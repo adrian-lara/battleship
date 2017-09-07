@@ -25,6 +25,11 @@ class PlayerTest < Minitest::Test
     assert_instance_of Board, @player_1.opponent_board
   end
 
+  def test_player_is_createed_with_two_empty_arrays_for_player_ship_placement
+    assert_equal [], @player_1.two_ship_location
+    assert_equal [], @player_1.three_ship_location
+  end
+
   def test_player_has_a_type
     assert_equal "user", @player_1.type
     assert_equal "computer", @player_2.type
@@ -35,22 +40,23 @@ class PlayerTest < Minitest::Test
     assert_equal [], @player_2.turn_history
   end
 
+#TODO how to test user_inputs
   def test_assign_ships_validates_and_assigns_both_randomly_placed_ships_for_computer_user
     @player_2.assign_ships
 
-    refute_equal [], @player_2.owner_board.two_ship_location
-    p @player_2.owner_board.two_ship_location
-    refute_equal [], @player_2.owner_board.three_ship_location
-    p @player_2.owner_board.three_ship_location
+    refute_equal [], @player_2.two_ship_location
+    p @player_2.two_ship_location
+    refute_equal [], @player_2.three_ship_location
+    p @player_2.three_ship_location
   end
 
   def test_assign_ships_prompts_for_and_performs_validation_and_assigns_both_ships
     @player_1.assign_ships
 
-    refute_equal [], @player_1.owner_board.two_ship_location
-    p @player_1.owner_board.two_ship_location
-    refute_equal [], @player_1.owner_board.three_ship_location
-    p @player_1.owner_board.three_ship_location
+    refute_equal [], @player_1.two_ship_location
+    p @player_1.two_ship_location
+    refute_equal [], @player_1.three_ship_location
+    p @player_1.three_ship_location
   end
 
 end

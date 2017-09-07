@@ -6,9 +6,9 @@ class Turn
     @shot = shot
   end
 
-  def result(board)
-    if (board.two_ship_location.include?(@shot) ||
-        board.three_ship_location.include?(@shot))
+  def result(player)
+    if (player.two_ship_location.include?(@shot) ||
+        player.three_ship_location.include?(@shot))
       "hit"
     else
       "miss"

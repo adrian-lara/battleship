@@ -55,7 +55,7 @@ class Battleship
     end
     current_shot = Turn.new(shot_location)
     current_player.turn_history << current_shot
-    current_shot.result(opponent.owner_board)
+    current_shot.result(opponent)
   end
 
   def user_shot(current_player)
@@ -93,13 +93,12 @@ class Battleship
   end
 
   def remove_ship_coordinate(coordinate, opponent)
-    current_board = opponent.owner_board
-    if current_board.two_ship_location.include?(coordinate)
-      current_board.two_ship_location.delete(coordinate)
-      check_ship_status(current_board.two_ship_location)
+    if opponent.two_ship_location.include?(coordinate)
+      opponent.two_ship_location.delete(coordinate)
+      check_ship_status(opponent.two_ship_location)
     else
-      current_board.three_ship_location.delete(coordinate)
-      check_ship_status(current_board.two_ship_location)
+      opponent.three_ship_location.delete(coordinate)
+      check_ship_status(opponent.two_ship_location)
     end
   end
 
@@ -108,9 +107,8 @@ class Battleship
   end
 
   def check_all_ships_destroyed(player)
-    #code works until here
-    if (player.owner_board.two_ship_location.empty? &&
-        player.owner_board.three_ship_location.empty?)
+    if (player.two_ship_location.empty? &&
+        player.three_ship_location.empty?)
       return "Game Over"
     end
   end

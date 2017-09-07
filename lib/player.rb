@@ -3,13 +3,16 @@ require './lib/validation'
 
 class Player
 
-  attr_accessor :owner_board, :opponent_board, :type, :turn_history
+  attr_reader :type
+  attr_accessor :owner_board, :opponent_board, :turn_history, :two_ship_location, :three_ship_location
 
   def initialize(type)
     @owner_board = Board.new
     @opponent_board = Board.new
     @type = type
     @turn_history = []
+    @two_ship_location = []
+    @three_ship_location = []
   end
 
   def assign_ships()
@@ -20,9 +23,11 @@ class Player
   def assign_computer_ships
     @owner_board.create_board
     assign_computer_ship("two-unit")
-    @owner_board.print_board # delete me TODO
-    assign_computer_ship("three-unit", @owner_board.two_ship_location)
-    @owner_board.print_board #delete me TODO
+# delete print board TODO
+    @owner_board.print_board
+    assign_computer_ship("three-unit", @two_ship_location)
+# delete print board TODO
+    @owner_board.print_board
   end
 
   def assign_computer_ship(ship_type, two_ship_location = nil)
@@ -38,6 +43,7 @@ class Player
       random_column = rand(1..4)
       coordinates << random_row + random_column.to_s
 
+#TODO this can be split out
       random_direction = rand(1..4)
       if random_direction == 1
         new_row_number = (random_row_number + shift) % 4
@@ -71,9 +77,9 @@ class Player
 
   def update_ship_location(coordinates, ship_type)
     if ship_type == "two-unit"
-      @owner_board.two_ship_location = coordinates
+      @two_ship_location = coordinates
     elsif ship_type == "three-unit"
-      @owner_board.three_ship_location = coordinates
+      @three_ship_location = coordinates
     end
   end
 
@@ -100,7 +106,7 @@ class Player
     @owner_board.create_board
     assignment_prompt
     assign_user_ship("two-unit")
-    assign_user_ship("three-unit", @owner_board.two_ship_location)
+    assign_user_ship("three-unit", @two_ship_location)
     @owner_board.print_board
   end
 

@@ -3,16 +3,13 @@ require 'pry'
 class Board
 
   attr_reader :size, :border, :header_row
-  attr_accessor :working_rows, :two_ship_location, :three_ship_location
+  attr_accessor :working_rows
 
   def initialize(size = 4)
     @size = size
     @border = ""
     @header_row = []
     @working_rows = []
-#TODO consider moving ship locations to players
-    @two_ship_location = []
-    @three_ship_location = []
   end
 
   def create_board(size = @size)
