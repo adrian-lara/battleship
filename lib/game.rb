@@ -12,7 +12,9 @@ class Game < Turn
 
   def run
     start_time
+    ship_placement_begin_message
     ship_placement_phase
+    main_phase_begin_message
     main_phase
     end_time
     display_game_result
@@ -24,6 +26,11 @@ class Game < Turn
 
   def end_time
     @timer = Time.now - @timer
+  end
+
+  def ship_placement_begin_message
+    puts "\n\n____Begin Placement Phase____\n" +
+         "-Each player places ships on his or her board.\n\n"
   end
 
   def ship_placement_phase
@@ -42,6 +49,11 @@ class Game < Turn
 
       execute_turn(current_player, opponent)
     end
+  end
+
+  def main_phase_begin_message
+    puts "\n\nShips have been placed!\n\n" +
+         "____Begin Battle Phase____\n\n"
   end
 
   def create_user_progress_board

@@ -110,7 +110,7 @@ class Player < Validation
   end
 
   def assignment_prompt
-    puts "\nI have laid out my ships on the grid.\n" +
+    puts "\nI, the computer, have laid out my ships on the grid.\n" +
          "You now need to lay out your two ships.\n" +
          "The first is two units long and the\n" +
          "second is three units long.\n" +
