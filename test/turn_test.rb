@@ -10,7 +10,7 @@ class TurnTest < Minitest::Test
 
   def setup
     @turn = Turn.new("A1")
-    @player = Player.new("user")
+    @player = Player.new("User")
     @player.two_ship_location = ["A1", "A2"]
     @player.three_ship_location = ["B1", "B2", "B3"]
   end

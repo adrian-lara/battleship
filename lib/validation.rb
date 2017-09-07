@@ -5,7 +5,7 @@ class Validation
   attr_reader :result, :head, :tail, :middle
   attr_accessor :two_ship_location
 
-  def initialize(head, tail, ship_type, two_ship_location = nil, user_type)
+  def initialize(head, tail, ship_type, user_type, two_ship_location = nil)
     @head = Coordinates.new(head)
     @tail = Coordinates.new(tail)
     @ship_type = ship_type

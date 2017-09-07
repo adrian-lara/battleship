@@ -15,7 +15,7 @@ class CoordinatesTest < Minitest::Test
   end
 
   def test_coordinates_has_a_location_component_that_is_of_length_2
-    assert_equal 2, @coordinates.location.length
+    assert_equal "A1", @coordinates.location
   end
 
   def test_valid_returns_whether_given_location_is_valid
@@ -36,6 +36,10 @@ class CoordinatesTest < Minitest::Test
 
     coordinates5 = Coordinates.new("BC")
     refute coordinates5.valid?
+  end
+
+  def test_row_returns_first_char_of_location
+    assert_equal "A", @coordinates.row
   end
 
   def test_row_number_returns_row_number_according_to_first_character_of_location
