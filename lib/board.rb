@@ -10,6 +10,7 @@ class Board
     @border = ""
     @header_row = []
     @working_rows = []
+#TODO consider moving ship locations to players
     @two_ship_location = []
     @three_ship_location = []
   end

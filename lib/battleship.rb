@@ -23,18 +23,24 @@ class Battleship
     player_index = 1 #1 = user turn ; 0 = computer turn
 
 # #TODO!!!!! currently cannot exit loop
-#     while @winner != nil
+    while @winner.nil?
       opponent_index = player_index
       player_index = (player_index + 1) % 2
       current_player = @players[player_index]
       opponent = @players[opponent_index]
 
-      result = take_shot(current_player, opponent)
-      #if result == "hit", call hit_sequence method
+      hit_or_miss = take_shot(current_player, opponent)
+
+      if hit_or_miss == "hit"
+        current_shot = current_player.turn_history.last.shot
+        result = hit_sequence(current_shot, opponent)
+      end
+
+      break @winner = current_player.type if result == "Game Over"
+
       #if current_player.type == user, update_opponent_board method to change rendering of opponent_board
       # => and render opponent_board
-# @winner == "user"
-# end
+    end
   end
 
   def create_opponent_boards
@@ -79,6 +85,34 @@ class Battleship
       shot_validity = Coordinates.new(location).valid?
     end
     location
+  end
+
+  def hit_sequence(shot, opponent)
+    ship_destroyed = remove_ship_coordinate(shot, opponent)
+    check_all_ships_destroyed(opponent) if ship_destroyed
+  end
+
+  def remove_ship_coordinate(coordinate, opponent)
+    current_board = opponent.owner_board
+    if current_board.two_ship_location.include?(coordinate)
+      current_board.two_ship_location.delete(coordinate)
+      check_ship_status(current_board.two_ship_location)
+    else
+      current_board.three_ship_location.delete(coordinate)
+      check_ship_status(current_board.two_ship_location)
+    end
+  end
+
+  def check_ship_status(ship)
+    true if ship.empty?
+  end
+
+  def check_all_ships_destroyed(player)
+    #code works until here
+    if (player.owner_board.two_ship_location.empty? &&
+        player.owner_board.three_ship_location.empty?)
+      return "Game Over"
+    end
   end
 
 end
