@@ -56,9 +56,6 @@ class BattleshipTest < Minitest::Test
 #set up game where computer has one ship coordinate left
 #check @winner = "user"
   def test_hit_sequence_removes_ship_coordinate_from_opponent_ship_location_array
-    @battleship.players[1].two_ship_location = ["A1"]
-    p @battleship.players[1].two_ship_location
-    p @battleship.players[1].three_ship_location
     @battleship.main_phase
 
     refute_nil @battleship.winner

@@ -8,7 +8,7 @@ class Battleship
   attr_reader :status, :players, :timer, :winner
   def initialize()
     @status = nil
-    @players = [Player.new("user"), Player.new("computer")]
+    @players = [Player.new("User"), Player.new("Computer")]
     @timer = nil
     @winner = nil
   end
@@ -22,6 +22,7 @@ class Battleship
   end
 
   def main_phase
+    assume_assign_ships_phase_occurred
     create_opponent_boards
     player_index = 1 #1 = user turn ; 0 = computer turn
 
@@ -30,35 +31,55 @@ class Battleship
       player_index = (player_index + 1) % 2
       current_player = @players[player_index]
       opponent = @players[opponent_index]
+      display_turn_owner(current_player)
 
+      current_player.opponent_board.print_board if current_player.type == "User"
 
-      hit_or_miss = take_shot(current_player, opponent)
+      #shot_sequence
+      current_turn = take_shot(current_player)
+      shot_result = current_turn.result(opponent)
+      display_shot_result(current_turn, shot_result)
 
-      if hit_or_miss == "hit"
-        current_shot = current_player.turn_history.last.shot
-        result = hit_sequence(current_shot, opponent)
+      #hit_sequence
+      if shot_result == "hit"
+        turn_result = hit_sequence(current_turn.shot, opponent)
       end
 
-      break @winner = current_player.type if result == "Game Over"
-      
-      #if current_player.type == user, update_opponent_board method to change rendering of opponent_board
+      break @winner = current_player if turn_result == "Game Over"
+
+      if current_player.type == "User"
+        update_opponent_board(current_turn, shot_result)
+      end
+      #if , update_opponent_board method to change rendering of opponent_board
       # => and render opponent_board
     end
+
+    display_game_result
   end
 
+#might only need to create user opponent board
   def create_opponent_boards
     @players.each { |player| player.opponent_board.create_board }
   end
 
-  def take_shot(current_player, opponent)
-    if current_player.type == "user"
+  def display_turn_owner(current_player)
+    puts "\n===#{current_player.type}'s Turn!===\n"
+  end
+
+  def take_shot(current_player)
+    if current_player.type == "User"
       shot_location = user_shot(current_player)
     else
       shot_location = computer_shot(current_player)
     end
-    current_shot = Turn.new(shot_location)
-    current_player.turn_history << current_shot
-    current_shot.result(opponent)
+    current_turn = Turn.new(shot_location)
+    current_player.turn_history << current_turn
+
+    current_turn
+  end
+
+  def display_shot_result(turn, shot_result)
+    puts "The shot #{turn.shot} was a #{shot_result}!\n"
   end
 
   def user_shot(current_player)
@@ -70,6 +91,13 @@ class Battleship
       shot_validity = Coordinates.new(location).valid?
     end
     location
+  end
+
+  def update_opponent_board(turn, result)
+    #use shot location to find opponent_board working_rows
+    coordinates = Coordinates.new(turn.shot)
+    board = @players[0].opponent_board.working_rows
+    board[coordinates.row_number][coordinates.column_number] = result[0].upcase
   end
 
   def computer_shot(current_player)
@@ -114,6 +142,11 @@ class Battleship
         player.three_ship_location.empty?)
       return "Game Over"
     end
+  end
+
+  def display_game_result
+    puts "\n#{@winner.type} wins!!\n"
+    puts "\nIt took #{@winner.turn_history.count} turns!\n\n"
   end
 
 end
