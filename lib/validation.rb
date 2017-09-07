@@ -1,4 +1,3 @@
-require './lib/board'
 require './lib/coordinates'
 
 class Validation

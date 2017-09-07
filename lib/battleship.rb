@@ -22,12 +22,12 @@ class Battleship
     create_opponent_boards
     player_index = 1 #1 = user turn ; 0 = computer turn
 
-# #TODO!!!!! currently cannot exit loop
     while @winner.nil?
       opponent_index = player_index
       player_index = (player_index + 1) % 2
       current_player = @players[player_index]
       opponent = @players[opponent_index]
+
 
       hit_or_miss = take_shot(current_player, opponent)
 
