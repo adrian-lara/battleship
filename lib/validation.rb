@@ -5,7 +5,7 @@ class Validation
   attr_reader :result, :head, :tail, :middle
   attr_accessor :two_ship_location
 
-  def initialize(head, tail, ship_type, two_ship_location = nil)
+  def initialize(head, tail, ship_type, two_ship_location = nil, user_type)
     @head = Coordinates.new(head)
     @tail = Coordinates.new(tail)
     @ship_type = ship_type
@@ -16,6 +16,7 @@ class Validation
     @total_proximity = nil
 
     @two_ship_location = two_ship_location
+    @user_type = user_type
 
     @result = false
   end
@@ -39,21 +40,11 @@ class Validation
     end
   end
 
-  def off_board_fail
-    puts "\nThese positions aren't on the game board.\n"
-    false
-  end
-
   def two_ship_proximity_check?
     return proximity_fail unless @row_proximity <= 1
     return proximity_fail unless @column_proximity <= 1
     return proximity_fail if @total_proximity == 0 || @total_proximity == 2
     true
-  end
-
-  def proximity_fail
-    puts "\nThese positions aren't horizontally or vertically close enough to each other.\n"
-    false
   end
 
   def three_ship_location_valid?
@@ -101,8 +92,18 @@ class Validation
     @middle = Coordinates.new(middle_row + middle_column)
   end
 
+  def proximity_fail
+    puts "\nThese positions aren't horizontally or vertically close enough to each other.\n" if @user_type == "User"
+    false
+  end
+
   def three_ship_overlap_fail
-    puts "\nThese positions overlap with the two unit ship you previously placed.\n"
+    puts "\nThese positions overlap with the two unit ship you previously placed.\n" if @user_type == "User"
+    false
+  end
+
+  def off_board_fail
+    puts "\nThese positions aren't valid positions on the game board.\n" if @user_type == "User"
     false
   end
 

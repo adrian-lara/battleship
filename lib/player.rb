@@ -16,26 +16,23 @@ class Player < Validation
   end
 
   def assign_ships
-    assign_computer_ships if @type == "Computer"
     assign_user_ships if @type == "User"
+    assign_computer_ships if @type == "Computer"
   end
 
   def assign_computer_ships
     @owner_board.create_board
     assign_computer_ship("two-unit")
-# delete print board TODO
-    @owner_board.print_board
     assign_computer_ship("three-unit", @two_ship_location)
 # delete print board TODO
     @owner_board.print_board
   end
 
   def assign_computer_ship(ship_type, two_ship_location = nil)
-    validity = Validation.new("", "", ship_type, two_ship_location)
+    validity = Validation.new("", "", ship_type, two_ship_location, @type)
 
     shift = head_tail_proximity_difference(ship_type)
 
-#TODO turn off stdout
     while validity.result == false
       coordinates = []
       head = random_location
@@ -43,7 +40,7 @@ class Player < Validation
 
       tail = random_tail(head, shift)
       coordinates << tail
-      validity = Validation.new(head, tail, ship_type, two_ship_location)
+      validity = Validation.new(head, tail, ship_type, two_ship_location, @type)
       validity.perform_validation
     end
 
@@ -61,21 +58,15 @@ class Player < Validation
   end
 
   def random_tail(location, shift)
-    direction = rand(1..4)
+    direction = rand(1..2)
+    sign = [1, -1][rand(0..1)]
     head = Coordinates.new(location)
     if direction == 1
-      new_row_number = (head.row_number + shift) % 4
+      new_row_number = (head.row_number + (sign * shift)) % 4
       new_row = ["A", "B", "C", "D"][new_row_number]
       new_row + head.column_number.to_s
-    elsif direction == 2
-      new_row_number = (head.row_number - shift) % 4
-      new_row = ["A", "B", "C", "D"][new_row_number]
-      new_row + head.column_number.to_s
-    elsif direction == 3
-      new_column = head.column_number + shift
-      head.row + new_column.to_s
-    elsif direction == 4
-      new_column = head.column_number - shift
+    else
+      new_column = head.column_number + (sign * shift)
       head.row + new_column.to_s
     end
   end
@@ -122,23 +113,25 @@ class Player < Validation
 
   def assignment_prompt
     puts "\nI have laid out my ships on the grid.\n" +
-         "You now need to layout your two ships.\n" +
+         "You now need to lay out your two ships.\n" +
          "The first is two units long and the\n" +
          "second is three units long.\n" +
-         "The grid has A1 at the top left and D4 at the bottom right.\n\n"
+         "The grid has A1 at the top left and D4 at the bottom right.\n" +
+         "For reference, 'A1 A2' would be a valid two-unit ship input,\n" +
+         "and 'A1 C1' would be a valid three-unit ship input.\n\n"
   end
 
   def assign_user_ship(ship_type, two_ship_location = nil)
-    validity = Validation.new("", "", ship_type, two_ship_location)
+    validity = Validation.new("", "", ship_type, two_ship_location, @type)
 
     while validity.result == false
       @owner_board.print_board
       puts "Enter the squares for the #{ship_type} ship:\n"
       location = gets.chomp
-      next puts "That's not on the board!" unless location.include?(" ")
+      next puts "That's not a valid entry!" unless location.include?(" ")
       coordinates = location.split(' ', 2)
 
-      validity = Validation.new(coordinates[0], coordinates[1], ship_type, two_ship_location)
+      validity = Validation.new(coordinates[0], coordinates[1], ship_type, two_ship_location, @type)
       validity.perform_validation
     end
 

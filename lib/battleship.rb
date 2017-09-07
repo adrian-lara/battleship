@@ -11,5 +11,9 @@ while begin_choice != "p"
 
   break if begin_choice == "q"
   WelcomeMessages.print_instructions if begin_choice == "i"
-  Game.new.run if begin_choice == "p"
+  if begin_choice == "p"
+    WelcomeMessages.print_start
+    Game.new.run
+  end
+
 end

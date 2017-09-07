@@ -1,12 +1,10 @@
 require './lib/player'
 require './lib/turn'
-require './lib/coordinates'
 
 class Game < Turn
 
-  attr_reader :status, :players, :timer, :winner
+  attr_reader :players, :timer, :winner
   def initialize()
-    @status = nil
     @players = [Player.new("User"), Player.new("Computer")]
     @timer = nil
     @winner = nil
