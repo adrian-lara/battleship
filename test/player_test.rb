@@ -21,8 +21,8 @@ class PlayerTest < Minitest::Test
     assert_instance_of Board, @player_1.owner_board
   end
 
-  def test_player_has_an_opponent_board
-    assert_instance_of Board, @player_1.opponent_board
+  def test_player_has_an_progress_board
+    assert_instance_of Board, @player_1.progress_board
   end
 
   def test_player_is_createed_with_two_empty_arrays_for_player_ship_placement

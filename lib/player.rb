@@ -4,11 +4,11 @@ require './lib/validation'
 class Player
 
   attr_reader :type
-  attr_accessor :owner_board, :opponent_board, :turn_history, :two_ship_location, :three_ship_location
+  attr_accessor :owner_board, :progress_board, :turn_history, :two_ship_location, :three_ship_location
 
   def initialize(type)
     @owner_board = Board.new
-    @opponent_board = Board.new
+    @progress_board = Board.new
     @type = type
     @turn_history = []
     @two_ship_location = []
